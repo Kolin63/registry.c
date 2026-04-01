@@ -1,0 +1,5 @@
+Language: C
+BasedOnStyle: Google
+DerivePointerAlignment: False
+PointerAlignment: Left
+IndentCaseLabels: False
