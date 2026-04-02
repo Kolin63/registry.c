@@ -77,7 +77,8 @@ void animal_test() {
   {
     char* key = "willy";
     int age = 6;
-    registry_add(reg, key, &age);
+    EQUALS_CHECK(registry_add(reg, key, &age), 0);
+    EQUALS_CHECK(registry_add(reg, key, &age), -1);
   }
 
   TOTAL_CHECK(reg, 0, "willy", int, 6);
@@ -85,7 +86,8 @@ void animal_test() {
   {
     char* key = "twilight";
     int age = 8;
-    registry_add(reg, key, &age);
+    EQUALS_CHECK(registry_add(reg, key, &age), 0);
+    EQUALS_CHECK(registry_add(reg, key, &age), -1);
   }
 
   TOTAL_CHECK(reg, 0, "twilight", int, 8);
@@ -94,8 +96,8 @@ void animal_test() {
   {
     char* key = "apple_jack";
     int age = 28;
-    registry_add(reg, key, &age);
-    registry_add(reg, key, &age);
+    EQUALS_CHECK(registry_add(reg, key, &age), 0);
+    EQUALS_CHECK(registry_add(reg, key, &age), -1);
   }
 
   TOTAL_CHECK(reg, 0, "apple_jack", int, 28);
@@ -105,7 +107,8 @@ void animal_test() {
   {
     char* key = "puff";
     int age = 23;
-    registry_add(reg, key, &age);
+    EQUALS_CHECK(registry_add(reg, key, &age), 0);
+    EQUALS_CHECK(registry_add(reg, key, &age), -1);
   }
 
   TOTAL_CHECK(reg, 0, "apple_jack", int, 28);
@@ -116,7 +119,8 @@ void animal_test() {
   {
     char* key = "babe";
     int age = 10;
-    registry_add(reg, key, &age);
+    EQUALS_CHECK(registry_add(reg, key, &age), 0);
+    EQUALS_CHECK(registry_add(reg, key, &age), -1);
   }
 
   for (size_t i = 0; i < reg->length; i++) {

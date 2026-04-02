@@ -50,7 +50,7 @@ void registry_cleanup(struct registry* reg) {
   free(reg);
 }
 
-void registry_add(struct registry* reg, const char* key, const void* val) {
+int registry_add(struct registry* reg, const char* key, const void* val) {
   // do a binary search to find insertion index
   // 0 2 4 6 8
   //       ^
@@ -68,7 +68,7 @@ void registry_add(struct registry* reg, const char* key, const void* val) {
         right = mid - 1;
       } else {
         fprintf(stderr, "Key already exists in registry: %s\n", key);
-        return;
+        return -1;
       }
     }
     insert_index = left + (right - left) / 2;
@@ -113,6 +113,7 @@ void registry_add(struct registry* reg, const char* key, const void* val) {
   }
 
   reg->length++;
+  return 0;
 }
 
 void* registry_itov(struct registry* reg, int i) {

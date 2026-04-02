@@ -39,7 +39,8 @@ struct registry {
 struct registry* registry_init(int val_size);
 void registry_cleanup(struct registry* reg);
 
-void registry_add(struct registry* reg, const char* key, const void* val);
+// adds a key and a value. returns -1 if the key already exists
+int registry_add(struct registry* reg, const char* key, const void* val);
 
 // index to value. no bounds checking
 void* registry_itov(struct registry* reg, int i);
