@@ -105,8 +105,10 @@ int main() {
   if (tests_passed == tests_total) {
     printf("\n\e[0;102m\e[1;30m\e[4;30mAll Tests Passed (%i/%i)\e[0m\n",
            tests_passed, tests_total);
+    return 0;
   } else {
     printf("\n\e[0;101m\e[1;30m\e[4;30mFailed Tests (%i/%i)\e[0m\n",
            tests_passed, tests_total);
+    return tests_total - tests_passed;
   }
 }
