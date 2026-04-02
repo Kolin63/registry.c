@@ -1,18 +1,18 @@
-#ifndef ENDIAN_REGISTRY_H_
-#define ENDIAN_REGISTRY_H_
-
-#include <stdlib.h>
+#ifndef COLIN_REGISTRY_H_
+#define COLIN_REGISTRY_H_
 
 struct registry {
-  size_t length;
-  size_t val_size;
+  int length;
+  int val_size;
   char** keys;
   void* values;
 };
 
-struct registry* registry_init(size_t val_size);
+struct registry* registry_init(int val_size);
 void registry_cleanup(struct registry* reg);
 
 void registry_add(struct registry* reg, const char* key, const void* val);
+
+void* registry_get_by_index(struct registry* reg, int i);
 
 #endif
