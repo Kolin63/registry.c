@@ -4,6 +4,7 @@ project(colinregistry)
 
 enable_testing()
 add_subdirectory(tests)
+add_subdirectory(examples)
 
 add_library(${PROJECT_NAME} src/registry.c)
 
