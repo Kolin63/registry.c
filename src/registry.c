@@ -33,9 +33,10 @@ void registry_add(struct registry* reg, const char* key, const void* val) {
     int right = reg->length - 1;
     while (left <= right) {
       int mid = left + (right - left) / 2;
-      if (strcmp(reg->keys[mid], key) < 0) {
+      int cmp = strcmp(reg->keys[mid], key);
+      if (cmp < 0) {
         left = mid + 1;
-      } else if (strcmp(reg->keys[mid], key) > 0) {
+      } else if (cmp > 0) {
         right = mid - 1;
       } else {
         fprintf(stderr, "Key already exists in registry: %s\n", key);
@@ -86,7 +87,40 @@ void registry_add(struct registry* reg, const char* key, const void* val) {
   reg->length++;
 }
 
-// get value from index
 void* registry_itov(struct registry* reg, int i) {
   return reg->values + i * reg->val_size;
+}
+
+void* registry_itov_safe(struct registry* reg, int i) {
+  if (i < 0 || i >= reg->length) {
+    return NULL;
+  } else {
+    return reg->values + i * reg->val_size;
+  }
+}
+
+int registry_ktoi(struct registry* reg, const char* key) {
+  int left = 0;
+  int right = reg->length - 1;
+  while (left <= right) {
+    int mid = left + (right - left) / 2;
+    int cmp = strcmp(reg->keys[mid], key);
+    if (cmp < 0) {
+      left = mid + 1;
+    } else if (cmp > 0) {
+      right = mid - 1;
+    } else {
+      return mid;
+    }
+  }
+  return -1;
+}
+
+void* registry_ktov(struct registry* reg, const char* key) {
+  int i = registry_ktoi(reg, key);
+  if (i < 0) {
+    return NULL;
+  } else {
+    return registry_itov(reg, i);
+  }
 }
