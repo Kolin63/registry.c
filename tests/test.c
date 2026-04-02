@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../src/registry.h"
+#include "registry.h"
 
 static int tests_passed = 0;
 static int tests_total = 0;

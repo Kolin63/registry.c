@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 4.2)
 
-file(GLOB SOURCES "*.c" "../src/registry.c")
-
 add_executable(regtest test.c)
 
 target_link_libraries(regtest PRIVATE colinregistry)
