@@ -29,14 +29,29 @@
 #ifndef COLIN_REGISTRY_H_
 #define COLIN_REGISTRY_H_
 
+// an interface to a single registry. none of these fields should be manually
+// written to. to read from the keys or the values, either manually reading or
+// using the functions are ok
 struct registry {
+  // amount of keys / values
   int length;
+
+  // size of value type in bytes
   int val_size;
+
+  // array of keys
   char** keys;
+
+  // value data. continguous in memory
   void* values;
 };
 
+// puts a new registry on the heap. registry_cleanup() must be called when it
+// is done being used
 struct registry* registry_init(int val_size);
+
+// frees allocated memory for a registry. if the registry contains structs with
+// data on the heap, those fields must be freed before calling this function
 void registry_cleanup(struct registry* reg);
 
 // adds a key and a value. returns -1 if the key already exists
