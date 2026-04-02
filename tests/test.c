@@ -48,9 +48,22 @@ static int tests_total = 0;
            __LINE__, #x, #y);                                           \
   }
 
+#define EQUALS_STRING_CHECK(x, y)                                       \
+  tests_total++;                                                        \
+  if (strcmp(x, y) == 0) {                                              \
+    printf("\e[0;92m%s:%i: Equality: %s == %s\e[0m\n", __FILE_NAME__,   \
+           __LINE__, #x, #y);                                           \
+    tests_passed++;                                                     \
+  } else {                                                              \
+    printf("\e[0;91m%s:%i: Inequality: %s != %s\e[0m\n", __FILE_NAME__, \
+           __LINE__, #x, #y);                                           \
+  }
+
 #define GETTER_CHECK(reg, i, key, val_type, val)        \
   EQUALS_CHECK(*(int*)registry_itov(reg, i), val);      \
   EQUALS_CHECK(*(int*)registry_itov_safe(reg, i), val); \
+  EQUALS_STRING_CHECK(registry_itok(reg, i), key);      \
+  EQUALS_STRING_CHECK(registry_itok_safe(reg, i), key); \
   EQUALS_CHECK(registry_ktoi(reg, key), i);             \
   EQUALS_CHECK(*(int*)registry_ktov(reg, key), val);
 
@@ -118,6 +131,7 @@ void animal_test() {
   TOTAL_CHECK(reg, 4, "willy", int, 6);
 
   EQUALS_CHECK(registry_itov_safe(reg, -1), NULL);
+  EQUALS_CHECK(registry_itok_safe(reg, -1), NULL);
   EQUALS_CHECK(registry_ktoi(reg, "foobar"), -1);
   EQUALS_CHECK(registry_ktov(reg, "foobar"), NULL);
 
