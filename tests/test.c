@@ -87,7 +87,7 @@ void animal_test() {
 
   for (size_t i = 0; i < reg->length; i++) {
     printf("animal_test #%zi, %s, age %i\n", i, reg->keys[i],
-           *(int*)(registry_get_by_index(reg, i)));
+           *(int*)(registry_itov(reg, i)));
   }
 
   KEY_VALUE_CHECK(reg, 0, "apple_jack", int, 28);

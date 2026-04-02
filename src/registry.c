@@ -86,6 +86,7 @@ void registry_add(struct registry* reg, const char* key, const void* val) {
   reg->length++;
 }
 
-void* registry_get_by_index(struct registry* reg, int i) {
+// get value from index
+void* registry_itov(struct registry* reg, int i) {
   return reg->values + i * reg->val_size;
 }

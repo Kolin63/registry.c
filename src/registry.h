@@ -13,6 +13,7 @@ void registry_cleanup(struct registry* reg);
 
 void registry_add(struct registry* reg, const char* key, const void* val);
 
-void* registry_get_by_index(struct registry* reg, int i);
+// index to value
+void* registry_itov(struct registry* reg, int i);
 
 #endif
