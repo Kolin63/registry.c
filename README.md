@@ -140,13 +140,13 @@ index to value. returns NULL on error
 
 ### registry_itok()
 ```c
-char* registry_itok(struct registry* reg, int i);
+const char* registry_itok(struct registry* reg, int i);
 ```
 index to key. no bounds checking
 
 ### registry_itok_safe()
 ```c
-char* registry_itok_safe(struct registry* reg, int i);
+const char* registry_itok_safe(struct registry* reg, int i);
 ```
 index to key. returns NULL on error
 
