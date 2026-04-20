@@ -10,11 +10,10 @@ monsters, etc.
   - [struct registry](#struct-registry)
   - [registry_init()](#registry_init)
   - [registry_cleanup()](#registry_cleanup)
+  - [registry_safe_cmp()](#registry_safe_cmp)
   - [registry_add()](#registry_add)
   - [registry_itov()](#registry_itov)
   - [registry_itov_safe()](#registry_itov_safe)
-  - [registry_itok()](#registry_itok)
-  - [registry_itok_safe()](#registry_itok_safe)
   - [registry_ktoi()](#registry_ktoi)
   - [registry_ktov()](#registry_ktov)
 
@@ -30,50 +29,70 @@ directory.
 This can also be found in the examples folder.
 ```c
 /*
-   this example creates a registry where the key is a city and the value is the
+   this example creates a registry of cities. it stores the city name and its
    population
  */
 
 #include <stdio.h>
+#include <string.h>
 
 #include "registry.h"
 
-int main() {
-  // the key is always a string. specify the type of the value here.
-  // in a real scenario, a struct would be more useful. i am using an int here
-  // for simplicity
-  struct registry* reg = registry_init(sizeof(int));
+struct city {
+  int popl;
+  const char* name;
+};
 
-  // i make an int variable here so i can dereference it later
-  // when you add a value to a registry, it copies the bytes of the value, it
-  // does NOT copy the pointer. therefore, i can change this variable and the
-  // value in the registry will remain the same
-  int buf;
+// we need to provide a comparison function so the registry knows how to
+// interpret the data. its passed in registry_init
+int city_cmp(const void* a, const void* b) {
+  const struct city* ca = a;
+  const struct city* cb = b;
+  return strcmp(ca->name, cb->name);
+}
+
+int main() {
+  // initialize registry
+  struct registry* reg = registry_init(sizeof(struct city), city_cmp);
+
+  // i make buf here so i can dereference it later. when you add a value to a
+  // registry, it copies the bytes of the value, it does NOT copy the pointer.
+  // therefore, i can change this variable and the value in the registry will
+  // remain the same
+
+  struct city buf;
 
   // nyc
-  buf = 8600000; /* 8.6 million */
-  registry_add(reg, "new_york_city", &buf);
+  buf.popl = 8600000; /* 8.6 million */
+  buf.name = "new_york_city";
+  registry_add(reg, &buf);
 
   // los angeles
-  buf = 3900000; /* 3.9 million */
-  registry_add(reg, "los_angeles", &buf);
+  buf.popl = 3900000; /* 3.9 million */
+  buf.name = "los_angeles";
+  registry_add(reg, &buf);
 
   // seattle
-  buf = 800000; /* 800 thousand */
-  registry_add(reg, "seattle", &buf);
+  buf.popl = 800000; /* 800 thousand */
+  buf.name = "seattle";
+  registry_add(reg, &buf);
 
   // london
-  buf = 9000000; /* 9 million */
-  registry_add(reg, "london", &buf);
+  buf.popl = 9000000; /* 9 million */
+  buf.name = "london";
+  registry_add(reg, &buf);
 
   // tokyo
-  buf = 14000000; /* 14 million */
-  registry_add(reg, "tokyo", &buf);
+  buf.popl = 14000000; /* 14 million */
+  buf.name = "tokyo";
+  registry_add(reg, &buf);
 
   // now we will get the population for london
   // this function returns NULL if the key is invalid, but for simplicity we
   // will not check that here
-  printf("Population of London: %i\n", *(int*)registry_ktov(reg, "london"));
+  printf("Population of London: %i\n",
+         ((struct city*)registry_ktov(reg, &(struct city){.name = "london"}))
+             ->popl);
 
   // output: Population of London: 9000000
 
@@ -95,20 +114,23 @@ struct registry {
   // size of value type in bytes
   int val_size;
 
-  // array of keys
-  char** keys;
+  // comparison function for data type. does not need to check if values are
+  // null. should return:
+  // * 0 if a == b
+  // * a negative value if a < b
+  // * a positive value if a > b
+  int (*cmp)(const void* a, const void* b);
 
   // value data. continguous in memory
-  void* values;
+  void* vals;
 };
 ```
 an interface to a single registry. none of these fields should be manually
-written to. to read from the keys or the values, either manually reading or
-using the functions are ok
+written to.
 
 ### registry_init()
 ```c
-struct registry* registry_init(int val_size);
+struct registry* registry_init(int val_size, int (*cmp)(const void*, const void*));
 ```
 puts a new registry on the heap. `registry_cleanup()` must be called when it is
 done being used
@@ -120,11 +142,18 @@ void registry_cleanup(struct registry* reg);
 frees allocated memory for a registry. if the registry contains structs with
 data on the heap, those fields must be freed before calling this function
 
+### registry_safe_cmp()
+```c
+int registry_safe_cmp(const struct registry* reg, const void* a, const void* b);
+```
+calls the registry's cmp function. elides function call if either a or b are
+NULL. will segfault if the cmp function is unset.
+
 ### registry_add()
 ```c
-int registry_add(struct registry* reg, const char* key, const void* val);
+int registry_add(struct registry* reg, const void* val);
 ```
-adds a key and a value. returns -1 if the key already exists
+adds a value. returns -1 if the value already exists
 
 ### registry_itov()
 ```c
@@ -138,26 +167,14 @@ void* registry_itov_safe(const struct registry* reg, int i);
 ```
 index to value. returns NULL on error
 
-### registry_itok()
-```c
-const char* registry_itok(const struct registry* reg, int i);
-```
-index to key. no bounds checking
-
-### registry_itok_safe()
-```c
-const char* registry_itok_safe(const struct registry* reg, int i);
-```
-index to key. returns NULL on error
-
 ### registry_ktoi()
 ```c
-int registry_ktoi(const struct registry* reg, const char* key);
+int registry_ktoi(const struct registry* reg, const void* key);
 ```
 key to index. returns -1 if the key doesn't exist
 
 ### registry_ktov()
 ```c
-void* registry_ktov(const struct registry* reg, const char* key);
+void* registry_ktov(const struct registry* reg, const void* key);
 ```
 key to value. returns NULL on error
