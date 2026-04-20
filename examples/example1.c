@@ -4,45 +4,65 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 
 #include "registry.h"
 
-int main() {
-  // the key is always a string. specify the type of the value here.
-  // in a real scenario, a struct would be more useful. i am using an int here
-  // for simplicity
-  struct registry* reg = registry_init(sizeof(int));
+struct city {
+  int popl;
+  const char* name;
+};
 
-  // i make an int variable here so i can dereference it later
-  // when you add a value to a registry, it copies the bytes of the value, it
-  // does NOT copy the pointer. therefore, i can change this variable and the
-  // value in the registry will remain the same
-  int buf;
+int city_cmp(const void* a, const void* b) {
+  const struct city* ca = a;
+  const struct city* cb = b;
+  return strcmp(ca->name, cb->name);
+}
+
+int main() {
+  // initialize registry
+  // we need to provide a comparison function so the registry knows how to
+  // interpret the data
+  struct registry* reg = registry_init(sizeof(struct city), city_cmp);
+
+  // i make buf here so i can dereference it later. when you add a value to a
+  // registry, it copies the bytes of the value, it does NOT copy the pointer.
+  // therefore, i can change this variable and the value in the registry will
+  // remain the same
+
+  struct city buf;
 
   // nyc
-  buf = 8600000; /* 8.6 million */
-  registry_add(reg, "new_york_city", &buf);
+  buf.popl = 8600000; /* 8.6 million */
+  buf.name = "new_york_city";
+  registry_add(reg, &buf);
 
   // los angeles
-  buf = 3900000; /* 3.9 million */
-  registry_add(reg, "los_angeles", &buf);
+  buf.popl = 3900000; /* 3.9 million */
+  buf.name = "los_angeles";
+  registry_add(reg, &buf);
 
   // seattle
-  buf = 800000; /* 800 thousand */
-  registry_add(reg, "seattle", &buf);
+  buf.popl = 800000; /* 800 thousand */
+  buf.name = "seattle";
+  registry_add(reg, &buf);
 
   // london
-  buf = 9000000; /* 9 million */
-  registry_add(reg, "london", &buf);
+  buf.popl = 9000000; /* 9 million */
+  buf.name = "london";
+  registry_add(reg, &buf);
 
   // tokyo
-  buf = 14000000; /* 14 million */
-  registry_add(reg, "tokyo", &buf);
+  buf.popl = 14000000; /* 14 million */
+  buf.name = "tokyo";
+  registry_add(reg, &buf);
 
   // now we will get the population for london
   // this function returns NULL if the key is invalid, but for simplicity we
   // will not check that here
-  printf("Population of London: %i\n", *(int*)registry_ktov(reg, "london"));
+  printf("Population of London: %i\n",
+         ((struct city*)registry_ktov(reg, &(struct city){.name = "london"}))
+             ->popl);
 
   // output: Population of London: 9000000
 
