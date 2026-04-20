@@ -39,8 +39,11 @@ struct registry {
   // size of value type in bytes
   int val_size;
 
-  // array of keys
-  char** keys;
+  // comparison function for data type. should return:
+  // * 0 if a == b
+  // * a negative value if a < b
+  // * a positive value if a > b
+  int (*cmp)(const void* a, const void* b);
 
   // value data. continguous in memory
   void* values;
@@ -48,14 +51,19 @@ struct registry {
 
 // puts a new registry on the heap. registry_cleanup() must be called when it
 // is done being used
-struct registry* registry_init(int val_size);
+struct registry* registry_init(int val_size,
+                               int (*cmp)(const void*, const void*));
 
 // frees allocated memory for a registry. if the registry contains structs with
 // data on the heap, those fields must be freed before calling this function
 void registry_cleanup(struct registry* reg);
 
-// adds a key and a value. returns -1 if the key already exists
-int registry_add(struct registry* reg, const char* key, const void* val);
+// calls the registry's cmp function. elides function call if either a or b are
+// NULL. will segfault if the cmp function is unset.
+int registry_safe_cmp(const struct registry* reg, const void* a, const void* b);
+
+// adds a value. returns -1 if the value already exists
+int registry_add(struct registry* reg, const void* val);
 
 // index to value. no bounds checking
 void* registry_itov(const struct registry* reg, int i);
@@ -63,16 +71,10 @@ void* registry_itov(const struct registry* reg, int i);
 // index to value. returns NULL on error
 void* registry_itov_safe(const struct registry* reg, int i);
 
-// index to key. no bounds checking
-const char* registry_itok(const struct registry* reg, int i);
-
-// index to key. returns NULL on error
-const char* registry_itok_safe(const struct registry* reg, int i);
-
 // key to index. returns -1 if the key doesn't exist
-int registry_ktoi(const struct registry* reg, const char* key);
+int registry_ktoi(const struct registry* reg, const void* key);
 
-// key to value. returns NULL on error
-void* registry_ktov(const struct registry* reg, const char* key);
+// key to value. returns -1 if the key doesn't exist
+void* registry_ktov(const struct registry* reg, const void* key);
 
 #endif
