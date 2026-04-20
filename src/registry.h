@@ -46,7 +46,7 @@ struct registry {
   int (*cmp)(const void* a, const void* b);
 
   // value data. continguous in memory
-  void* values;
+  void* vals;
 };
 
 // puts a new registry on the heap. registry_cleanup() must be called when it

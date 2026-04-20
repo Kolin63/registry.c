@@ -22,7 +22,7 @@ int animal_cmp(const void* a, const void* b) {
 void key_check(const struct registry* reg, int i, const struct animal* key,
                const char* file, int line) {
   tests_total++;
-  if (registry_safe_cmp(reg, reg->values + i * reg->val_size, key) == 0) {
+  if (registry_safe_cmp(reg, reg->vals + i * reg->val_size, key) == 0) {
     printf("\e[0;92m%s:%i: Correct key\e[0m\n", file, line);
     tests_passed++;
   } else

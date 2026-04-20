@@ -36,13 +36,13 @@ struct registry* registry_init(int val_size,
   struct registry* reg = malloc(sizeof(struct registry));
   reg->length = 0;
   reg->val_size = val_size;
-  reg->values = NULL;
+  reg->vals = NULL;
   reg->cmp = cmp;
   return reg;
 }
 
 void registry_cleanup(struct registry* reg) {
-  free(reg->values);
+  free(reg->vals);
   free(reg);
 }
 
@@ -67,7 +67,7 @@ int registry_add(struct registry* reg, const void* val) {
     int right = reg->length - 1;
     while (left <= right) {
       int mid = left + (right - left) / 2;
-      int cmp = registry_safe_cmp(reg, reg->values + mid * reg->val_size, val);
+      int cmp = registry_safe_cmp(reg, reg->vals + mid * reg->val_size, val);
       if (cmp < 0) {
         left = mid + 1;
       } else if (cmp > 0) {
@@ -84,8 +84,8 @@ int registry_add(struct registry* reg, const void* val) {
   //       ^
   //       5
   {
-    reg->values = realloc(reg->values, (reg->length + 1) * reg->val_size);
-    void* src = reg->values + insert_index * reg->val_size;
+    reg->vals = realloc(reg->vals, (reg->length + 1) * reg->val_size);
+    void* src = reg->vals + insert_index * reg->val_size;
     void* dest = src + reg->val_size;
     const size_t n = (reg->length - insert_index) * reg->val_size;
     memmove(dest, src, n);
@@ -94,7 +94,7 @@ int registry_add(struct registry* reg, const void* val) {
   // move in new value
   {
     const void* src = val;
-    void* dest = reg->values + insert_index * reg->val_size;
+    void* dest = reg->vals + insert_index * reg->val_size;
     const size_t n = reg->val_size;
     memcpy(dest, src, n);
   }
@@ -104,14 +104,14 @@ int registry_add(struct registry* reg, const void* val) {
 }
 
 void* registry_itov(const struct registry* reg, int i) {
-  return reg->values + i * reg->val_size;
+  return reg->vals + i * reg->val_size;
 }
 
 void* registry_itov_safe(const struct registry* reg, int i) {
   if (i < 0 || i >= reg->length) {
     return NULL;
   } else {
-    return reg->values + i * reg->val_size;
+    return reg->vals + i * reg->val_size;
   }
 }
 
@@ -120,7 +120,7 @@ int registry_ktoi(const struct registry* reg, const void* key) {
   int right = reg->length - 1;
   while (left <= right) {
     int mid = left + (right - left) / 2;
-    int cmp = registry_safe_cmp(reg, reg->values + mid * reg->val_size, key);
+    int cmp = registry_safe_cmp(reg, reg->vals + mid * reg->val_size, key);
     if (cmp < 0) {
       left = mid + 1;
     } else if (cmp > 0) {
