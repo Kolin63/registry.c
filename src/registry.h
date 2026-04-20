@@ -30,8 +30,7 @@
 #define COLIN_REGISTRY_H_
 
 // an interface to a single registry. none of these fields should be manually
-// written to. to read from the keys or the values, either manually reading or
-// using the functions are ok
+// written to.
 struct registry {
   // amount of keys / values
   int length;
