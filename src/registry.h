@@ -39,7 +39,8 @@ struct registry {
   // size of value type in bytes
   int val_size;
 
-  // comparison function for data type. should return:
+  // comparison function for data type. does not need to check if values are
+  // null. should return:
   // * 0 if a == b
   // * a negative value if a < b
   // * a positive value if a > b
