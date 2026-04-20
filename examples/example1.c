@@ -1,5 +1,5 @@
 /*
-   this example creates a registry where the key is a city and the value is the
+   this example creates a registry of cities. it stores the city name and its
    population
  */
 
@@ -13,6 +13,8 @@ struct city {
   const char* name;
 };
 
+// we need to provide a comparison function so the registry knows how to
+// interpret the data. its passed in registry_init
 int city_cmp(const void* a, const void* b) {
   const struct city* ca = a;
   const struct city* cb = b;
@@ -21,8 +23,6 @@ int city_cmp(const void* a, const void* b) {
 
 int main() {
   // initialize registry
-  // we need to provide a comparison function so the registry knows how to
-  // interpret the data
   struct registry* reg = registry_init(sizeof(struct city), city_cmp);
 
   // i make buf here so i can dereference it later. when you add a value to a
