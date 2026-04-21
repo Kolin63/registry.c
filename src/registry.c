@@ -36,8 +36,8 @@ struct registry* registry_init(int val_size,
   struct registry* reg = malloc(sizeof(struct registry));
   reg->length = 0;
   reg->val_size = val_size;
-  reg->vals = NULL;
   reg->cmp = cmp;
+  reg->vals = NULL;
   return reg;
 }
 
