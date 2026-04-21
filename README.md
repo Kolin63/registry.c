@@ -10,6 +10,7 @@ monsters, etc.
   - [struct registry](#struct-registry)
   - [registry_init()](#registry_init)
   - [registry_cleanup()](#registry_cleanup)
+  - [registry_clear()](#registry_clear)
   - [registry_safe_cmp()](#registry_safe_cmp)
   - [registry_add()](#registry_add)
   - [registry_itov()](#registry_itov)
@@ -141,6 +142,13 @@ void registry_cleanup(struct registry* reg);
 ```
 frees allocated memory for a registry. if the registry contains structs with
 data on the heap, those fields must be freed before calling this function
+
+### registry_clear()
+```c
+void registry_clear(struct registry* reg);
+```
+removes all entries from registry. does not call registry_cleanup(). does not
+need to be called before calling registry_cleanup()
 
 ### registry_safe_cmp()
 ```c

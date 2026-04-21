@@ -46,6 +46,12 @@ void registry_cleanup(struct registry* reg) {
   free(reg);
 }
 
+void registry_clear(struct registry* reg) {
+  free(reg->vals);
+  reg->vals = NULL;
+  reg->length = 0;
+}
+
 int registry_safe_cmp(const struct registry* reg, const void* a,
                       const void* b) {
   if (a == b) return 0;

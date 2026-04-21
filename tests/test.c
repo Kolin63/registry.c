@@ -176,6 +176,21 @@ void animal_test() {
   equals_check_void_ptr(registry_ktov(reg, &(struct animal){.name = "foobar"}),
                         NULL, __FILE_NAME__, __LINE__);
 
+  registry_clear(reg);
+  equals_check_void_ptr(registry_itov_safe(reg, 0), NULL, __FILE_NAME__,
+                        __LINE__);
+
+  equals_check_int(registry_add(reg, &willy), 0, __FILE_NAME__, __LINE__);
+  equals_check_int(registry_add(reg, &willy), -1, __FILE_NAME__, __LINE__);
+
+  total_check(reg, 0, &(struct animal){.name = "willy"}, &willy, __FILE_NAME__,
+              __LINE__);
+
+  for (size_t i = 0; i < reg->length; i++) {
+    struct animal* animal = registry_itov(reg, i);
+    printf("animal_test #%zi, %s, age %i\n", i, animal->name, animal->age);
+  }
+
   registry_cleanup(reg);
 }
 

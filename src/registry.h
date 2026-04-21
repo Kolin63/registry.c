@@ -58,6 +58,10 @@ struct registry* registry_init(int val_size,
 // data on the heap, those fields must be freed before calling this function
 void registry_cleanup(struct registry* reg);
 
+// removes all entries from registry. does not call registry_cleanup(). does not
+// need to be called before calling registry_cleanup()
+void registry_clear(struct registry* reg);
+
 // calls the registry's cmp function. elides function call if either a or b are
 // NULL. will segfault if the cmp function is unset.
 int registry_safe_cmp(const struct registry* reg, const void* a, const void* b);
