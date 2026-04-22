@@ -104,7 +104,7 @@ void total_check(const struct registry* reg, int i, const struct animal* key,
 }
 
 void animal_test() {
-  struct registry* reg = registry_init(sizeof(struct animal), animal_cmp);
+  struct registry* reg = registry_init(sizeof(struct animal), animal_cmp, NULL);
 
   struct animal willy = {.name = "willy", .age = 6};
   struct animal twilight = {.name = "twilight", .age = 8};
@@ -194,8 +194,51 @@ void animal_test() {
   registry_cleanup(reg);
 }
 
+struct thing {
+  char* foo;
+};
+
+int thing_cmp(const void* a, const void* b) {
+  return strcmp(((struct thing*)a)->foo, ((struct thing*)b)->foo);
+}
+
+void thing_cleanup(void* elem) {
+  struct thing* thing = elem;
+  free(thing->foo);
+}
+
+void thing_test() {
+  struct registry* reg =
+      registry_init(sizeof(struct thing), thing_cmp, thing_cleanup);
+
+  const char* thing1_const_text = "skibidi toilet";
+  char* thing1_text = malloc(strlen(thing1_const_text) + 1);
+  strcpy(thing1_text, thing1_const_text);
+  struct thing thing1 = {.foo = thing1_text};
+  registry_add(reg, &thing1);
+
+  const char* thing2_const_text = "bop bop";
+  char* thing2_text = malloc(strlen(thing2_const_text) + 1);
+  strcpy(thing2_text, thing2_const_text);
+  struct thing thing2 = {.foo = thing2_text};
+  registry_add(reg, &thing2);
+
+  const char* thing3_const_text = "yes yes";
+  char* thing3_text = malloc(strlen(thing3_const_text) + 1);
+  strcpy(thing3_text, thing3_const_text);
+  struct thing thing3 = {.foo = thing3_text};
+  registry_add(reg, &thing3);
+
+  equals_check_void_ptr(thing1.foo, thing1_text, __FILE_NAME__, __LINE__);
+  equals_check_void_ptr(thing2.foo, thing2_text, __FILE_NAME__, __LINE__);
+  equals_check_void_ptr(thing3.foo, thing3_text, __FILE_NAME__, __LINE__);
+
+  registry_cleanup(reg);
+}
+
 int main() {
   animal_test();
+  thing_test();
 
   if (tests_passed == tests_total) {
     printf("\n\e[0;102m\e[1;30m\e[4;30mAll Tests Passed (%i/%i)\e[0m\n",

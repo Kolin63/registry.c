@@ -45,6 +45,12 @@ struct registry {
   // * a positive value if a > b
   int (*cmp)(const void* a, const void* b);
 
+  // cleanup function that will be called whenever a value is removed from the
+  // registry. the argument elem is a pointer to the element that will be freed
+  // this should be used if, for example, there is a struct that has a pointer
+  // to something on the heap. if this is NULL, it will not be called
+  void (*cleanup)(void* elem);
+
   // value data. continguous in memory
   void* vals;
 };
@@ -52,7 +58,8 @@ struct registry {
 // puts a new registry on the heap. registry_cleanup() must be called when it
 // is done being used
 struct registry* registry_init(int val_size,
-                               int (*cmp)(const void*, const void*));
+                               int (*cmp)(const void*, const void*),
+                               void (*cleanup)(void* elem));
 
 // frees allocated memory for a registry. if the registry contains structs with
 // data on the heap, those fields must be freed before calling this function

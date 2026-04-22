@@ -54,7 +54,9 @@ int city_cmp(const void* a, const void* b) {
 
 int main() {
   // initialize registry
-  struct registry* reg = registry_init(sizeof(struct city), city_cmp);
+  // the last argument passed (the NULL) is a pointer to a cleanup function.
+  // we do not need a cleanup function because this example is simple
+  struct registry* reg = registry_init(sizeof(struct city), city_cmp, NULL);
 
   // i make buf here so i can dereference it later. when you add a value to a
   // registry, it copies the bytes of the value, it does NOT copy the pointer.
@@ -98,7 +100,8 @@ int main() {
   // output: Population of London: 9000000
 
   // if you have a registry where the values are structs with fields on the
-  // heap, remember to free those fields before calling registry_cleanup()
+  // heap, remember to make a cleanup function and pass it in the init function
+  // that cleanup function would be called here.
   registry_cleanup(reg);
 
   return 0;
@@ -121,6 +124,12 @@ struct registry {
   // * a negative value if a < b
   // * a positive value if a > b
   int (*cmp)(const void* a, const void* b);
+
+  // cleanup function that will be called whenever a value is removed from the
+  // registry. the argument elem is a pointer to the element that will be freed
+  // this should be used if, for example, there is a struct that has a pointer
+  // to something on the heap. if this is NULL, it will not be called
+  void (*cleanup)(void* elem);
 
   // value data. continguous in memory
   void* vals;

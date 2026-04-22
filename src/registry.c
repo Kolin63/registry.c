@@ -32,22 +32,33 @@
 #include <string.h>
 
 struct registry* registry_init(int val_size,
-                               int (*cmp)(const void*, const void*)) {
+                               int (*cmp)(const void*, const void*),
+                               void (*cleanup)(void*)) {
   struct registry* reg = malloc(sizeof(struct registry));
   reg->length = 0;
   reg->val_size = val_size;
   reg->cmp = cmp;
+  reg->cleanup = cleanup;
   reg->vals = NULL;
   return reg;
 }
 
-void registry_cleanup(struct registry* reg) {
+void registry_value_cleanup(const struct registry* reg) {
+  if (reg->cleanup != NULL) {
+    for (int i = 0; i < reg->length; i++) {
+      reg->cleanup(registry_itov(reg, i));
+    }
+  }
   free(reg->vals);
+}
+
+void registry_cleanup(struct registry* reg) {
+  registry_value_cleanup(reg);
   free(reg);
 }
 
 void registry_clear(struct registry* reg) {
-  free(reg->vals);
+  registry_value_cleanup(reg);
   reg->vals = NULL;
   reg->length = 0;
 }
