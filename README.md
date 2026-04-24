@@ -9,10 +9,10 @@ monsters, etc.
 - [Documentation](#documentation)
   - [struct registry](#struct-registry)
   - [registry_init()](#registry_init)
-  - [registry_cleanup()](#registry_cleanup)
   - [registry_clear()](#registry_clear)
   - [registry_safe_cmp()](#registry_safe_cmp)
   - [registry_add()](#registry_add)
+  - [registry_cleanup()](#registry_cleanup)
   - [registry_itov()](#registry_itov)
   - [registry_itov_safe()](#registry_itov_safe)
   - [registry_ktoi()](#registry_ktoi)
@@ -152,13 +152,6 @@ void registry_cleanup(struct registry* reg);
 frees allocated memory for a registry. if the registry contains structs with
 data on the heap, those fields must be freed before calling this function
 
-### registry_clear()
-```c
-void registry_clear(struct registry* reg);
-```
-removes all entries from registry. does not call registry_cleanup(). does not
-need to be called before calling registry_cleanup()
-
 ### registry_safe_cmp()
 ```c
 int registry_safe_cmp(const struct registry* reg, const void* a, const void* b);
@@ -171,6 +164,13 @@ NULL. will segfault if the cmp function is unset.
 int registry_add(struct registry* reg, const void* val);
 ```
 adds a value. returns -1 if the value already exists
+
+### registry_clear()
+```c
+void registry_clear(struct registry* reg);
+```
+removes all entries from registry. does not call registry_cleanup(). does not
+need to be called before calling registry_cleanup()
 
 ### registry_itov()
 ```c

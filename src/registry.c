@@ -57,12 +57,6 @@ void registry_cleanup(struct registry* reg) {
   free(reg);
 }
 
-void registry_clear(struct registry* reg) {
-  registry_value_cleanup(reg);
-  reg->vals = NULL;
-  reg->length = 0;
-}
-
 int registry_safe_cmp(const struct registry* reg, const void* a,
                       const void* b) {
   if (a == b) return 0;
@@ -118,6 +112,12 @@ int registry_add(struct registry* reg, const void* val) {
 
   reg->length++;
   return 0;
+}
+
+void registry_clear(struct registry* reg) {
+  registry_value_cleanup(reg);
+  reg->vals = NULL;
+  reg->length = 0;
 }
 
 void* registry_itov(const struct registry* reg, int i) {
