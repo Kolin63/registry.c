@@ -29,6 +29,10 @@
 #ifndef COLIN_REGISTRY_H_
 #define COLIN_REGISTRY_H_
 
+#define COLIN_REGISTRY_VERSION_MAJOR 2
+#define COLIN_REGISTRY_VERSION_MINOR 0
+#define COLIN_REGISTRY_VERSION_PATCH 0
+
 // an interface to a single registry. none of these fields should be manually
 // written to.
 struct registry {
