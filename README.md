@@ -161,9 +161,10 @@ NULL. will segfault if the cmp function is unset.
 
 ### registry_add()
 ```c
-int registry_add(struct registry* reg, const void* val);
+void* registry_add(struct registry* reg, const void* val);
 ```
-adds a value. returns -1 if the value already exists
+adds a value. returns pointer to value in registry, or NULL if key already
+exists
 
 ### registry_clear()
 ```c

@@ -75,6 +75,18 @@ void equals_check_void_ptr(const void* x, const void* y, const char* file,
   }
 }
 
+void equals_check_not_null(const void* x, const char* file, int line) {
+  {
+    tests_total++;
+    if (x != NULL) {
+      printf("\e[0;92m%s:%i: Success: %p != NULL\e[0m\n", file, line, x);
+      tests_passed++;
+    } else {
+      printf("\e[0;91m%s:%i: Failure: %p == NULL\e[0m\n", file, line, x);
+    }
+  }
+}
+
 void equals_check_string(const char* x, const char* y, const char* file,
                          int line) {
   tests_total++;
@@ -112,24 +124,28 @@ void animal_test() {
   struct animal puff = {.name = "puff", .age = 23};
   struct animal babe = {.name = "babe", .age = 10};
 
-  equals_check_int(registry_add(reg, &willy), 0, __FILE_NAME__, __LINE__);
-  equals_check_int(registry_add(reg, &willy), -1, __FILE_NAME__, __LINE__);
+  equals_check_not_null(registry_add(reg, &willy), __FILE_NAME__, __LINE__);
+  equals_check_void_ptr(registry_add(reg, &willy), NULL, __FILE_NAME__,
+                        __LINE__);
 
   total_check(reg, 0, &(struct animal){.name = "willy"}, &willy, __FILE_NAME__,
               __LINE__);
   total_check(reg, 0, &(struct animal){.name = "willy"}, &willy, __FILE_NAME__,
               __LINE__);
 
-  equals_check_int(registry_add(reg, &twilight), 0, __FILE_NAME__, __LINE__);
-  equals_check_int(registry_add(reg, &twilight), -1, __FILE_NAME__, __LINE__);
+  equals_check_not_null(registry_add(reg, &twilight), __FILE_NAME__, __LINE__);
+  equals_check_void_ptr(registry_add(reg, &twilight), NULL, __FILE_NAME__,
+                        __LINE__);
 
   total_check(reg, 0, &(struct animal){.name = "twilight"}, &twilight,
               __FILE_NAME__, __LINE__);
   total_check(reg, 1, &(struct animal){.name = "willy"}, &willy, __FILE_NAME__,
               __LINE__);
 
-  equals_check_int(registry_add(reg, &apple_jack), 0, __FILE_NAME__, __LINE__);
-  equals_check_int(registry_add(reg, &apple_jack), -1, __FILE_NAME__, __LINE__);
+  equals_check_not_null(registry_add(reg, &apple_jack), __FILE_NAME__,
+                        __LINE__);
+  equals_check_void_ptr(registry_add(reg, &apple_jack), NULL, __FILE_NAME__,
+                        __LINE__);
 
   total_check(reg, 0, &(struct animal){.name = "apple_jack"}, &apple_jack,
               __FILE_NAME__, __LINE__);
@@ -138,8 +154,9 @@ void animal_test() {
   total_check(reg, 2, &(struct animal){.name = "willy"}, &willy, __FILE_NAME__,
               __LINE__);
 
-  equals_check_int(registry_add(reg, &puff), 0, __FILE_NAME__, __LINE__);
-  equals_check_int(registry_add(reg, &puff), -1, __FILE_NAME__, __LINE__);
+  equals_check_not_null(registry_add(reg, &puff), __FILE_NAME__, __LINE__);
+  equals_check_void_ptr(registry_add(reg, &puff), NULL, __FILE_NAME__,
+                        __LINE__);
 
   total_check(reg, 0, &(struct animal){.name = "apple_jack"}, &apple_jack,
               __FILE_NAME__, __LINE__);
@@ -150,8 +167,9 @@ void animal_test() {
   total_check(reg, 3, &(struct animal){.name = "willy"}, &willy, __FILE_NAME__,
               __LINE__);
 
-  equals_check_int(registry_add(reg, &babe), 0, __FILE_NAME__, __LINE__);
-  equals_check_int(registry_add(reg, &babe), -1, __FILE_NAME__, __LINE__);
+  equals_check_not_null(registry_add(reg, &babe), __FILE_NAME__, __LINE__);
+  equals_check_void_ptr(registry_add(reg, &babe), NULL, __FILE_NAME__,
+                        __LINE__);
 
   for (size_t i = 0; i < reg->length; i++) {
     struct animal* animal = registry_itov(reg, i);
@@ -180,8 +198,9 @@ void animal_test() {
   equals_check_void_ptr(registry_itov_safe(reg, 0), NULL, __FILE_NAME__,
                         __LINE__);
 
-  equals_check_int(registry_add(reg, &willy), 0, __FILE_NAME__, __LINE__);
-  equals_check_int(registry_add(reg, &willy), -1, __FILE_NAME__, __LINE__);
+  equals_check_not_null(registry_add(reg, &willy), __FILE_NAME__, __LINE__);
+  equals_check_void_ptr(registry_add(reg, &willy), NULL, __FILE_NAME__,
+                        __LINE__);
 
   total_check(reg, 0, &(struct animal){.name = "willy"}, &willy, __FILE_NAME__,
               __LINE__);
@@ -215,19 +234,22 @@ void thing_test() {
   char* thing1_text = malloc(strlen(thing1_const_text) + 1);
   strcpy(thing1_text, thing1_const_text);
   struct thing thing1 = {.foo = thing1_text};
-  registry_add(reg, &thing1);
+  struct thing* thing1_reg = registry_add(reg, &thing1);
+  equals_check_int(thing_cmp(&thing1, thing1_reg), 0, __FILE_NAME__, __LINE__);
 
   const char* thing2_const_text = "bop bop";
   char* thing2_text = malloc(strlen(thing2_const_text) + 1);
   strcpy(thing2_text, thing2_const_text);
   struct thing thing2 = {.foo = thing2_text};
-  registry_add(reg, &thing2);
+  struct thing* thing2_reg = registry_add(reg, &thing2);
+  equals_check_int(thing_cmp(&thing2, thing2_reg), 0, __FILE_NAME__, __LINE__);
 
   const char* thing3_const_text = "yes yes";
   char* thing3_text = malloc(strlen(thing3_const_text) + 1);
   strcpy(thing3_text, thing3_const_text);
   struct thing thing3 = {.foo = thing3_text};
-  registry_add(reg, &thing3);
+  struct thing* thing3_reg = registry_add(reg, &thing3);
+  equals_check_int(thing_cmp(&thing3, thing3_reg), 0, __FILE_NAME__, __LINE__);
 
   equals_check_void_ptr(thing1.foo, thing1_text, __FILE_NAME__, __LINE__);
   equals_check_void_ptr(thing2.foo, thing2_text, __FILE_NAME__, __LINE__);
