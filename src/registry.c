@@ -60,9 +60,9 @@ void registry_cleanup(struct registry* reg) {
 int registry_safe_cmp(const struct registry* reg, const void* a,
                       const void* b) {
   if (a == b) return 0;
-  if (a == NULL || b == NULL) {
+  else if (a == NULL || b == NULL) {
     if (a > b) return 1;
-    if (a < b) return -1;
+    else if (a < b) return -1;
   }
   return reg->cmp(a, b);
 }
@@ -157,12 +157,9 @@ void* registry_ktov(const struct registry* reg, const void* key) {
 
 int registry_strcmp(const char* a, const char* b) {
   while (1) {
-    if (*a > *b)
-      return 1;
-    else if (*a < *b)
-      return -1;
-    else if (*a == '\0')
-      return 0;
+    if (*a > *b) return 1;
+    else if (*a < *b) return -1;
+    else if (*a == '\0') return 0;
     a++;
     b++;
   }
