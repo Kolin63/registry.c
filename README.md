@@ -1,5 +1,5 @@
 # registry.c
-A 2-file C-23 library that implements a simple registry (a.k.a. hashmap). It is
+A 2-file C99 library that implements a simple registry (a.k.a. hashmap). It is
 designed for moddable or data-driven games where the entries could be items,
 monsters, etc.
 

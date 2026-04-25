@@ -12,14 +12,14 @@ add_test(NAME strcmptest COMMAND strcmptest)
 add_test(NAME regstrcmptest COMMAND regstrcmptest)
 
 set_target_properties(regtest PROPERTIES
-  C_STANDARD 23
+  C_STANDARD 99
   C_STANDARD_REQUIRED ON
 )
 set_target_properties(strcmptest PROPERTIES
-  C_STANDARD 23
+  C_STANDARD 99
   C_STANDARD_REQUIRED ON
 )
 set_target_properties(regstrcmptest PROPERTIES
-  C_STANDARD 23
+  C_STANDARD 99
   C_STANDARD_REQUIRED ON
 )
