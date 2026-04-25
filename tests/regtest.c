@@ -16,7 +16,7 @@ struct animal {
 int animal_cmp(const void* a, const void* b) {
   const struct animal* aa = a;
   const struct animal* ab = b;
-  return strcmp(aa->name, ab->name);
+  return registry_strcmp(aa->name, ab->name);
 }
 
 void key_check(const struct registry* reg, int i, const struct animal* key,
@@ -218,7 +218,7 @@ struct thing {
 };
 
 int thing_cmp(const void* a, const void* b) {
-  return strcmp(((struct thing*)a)->foo, ((struct thing*)b)->foo);
+  return registry_strcmp(((struct thing*)a)->foo, ((struct thing*)b)->foo);
 }
 
 void thing_cleanup(void* elem) {

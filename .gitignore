@@ -18,4 +18,6 @@ CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
 regtest
+regstrcmptest
+strcmptest
 example1

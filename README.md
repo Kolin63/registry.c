@@ -17,6 +17,7 @@ monsters, etc.
   - [registry_itov_safe()](#registry_itov_safe)
   - [registry_ktoi()](#registry_ktoi)
   - [registry_ktov()](#registry_ktov)
+  - [registry_strcmp()](#registry_strcmp)
 
 ## Usage
 You can add `src/registry.c` and `src/registry.h` to your project (this code is
@@ -35,7 +36,6 @@ This can also be found in the examples folder.
  */
 
 #include <stdio.h>
-#include <string.h>
 
 #include "registry.h"
 
@@ -49,7 +49,9 @@ struct city {
 int city_cmp(const void* a, const void* b) {
   const struct city* ca = a;
   const struct city* cb = b;
-  return strcmp(ca->name, cb->name);
+  // we could use the regular strcmp here, but the custom implementation is
+  // faster for our use
+  return registry_strcmp(ca->name, cb->name);
 }
 
 int main() {
@@ -196,3 +198,9 @@ key to index. returns -1 if the key doesn't exist
 void* registry_ktov(const struct registry* reg, const void* key);
 ```
 key to value. returns NULL on error
+
+### registry_strcmp()
+```c
+int registry_strcmp(const char* a, const char* b);
+```
+fast implementation of strcmp. only return values are 1, 0, or -1

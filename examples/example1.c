@@ -4,7 +4,6 @@
  */
 
 #include <stdio.h>
-#include <string.h>
 
 #include "registry.h"
 
@@ -18,7 +17,9 @@ struct city {
 int city_cmp(const void* a, const void* b) {
   const struct city* ca = a;
   const struct city* cb = b;
-  return strcmp(ca->name, cb->name);
+  // we could use the regular strcmp here, but the custom implementation is
+  // faster for our use
+  return registry_strcmp(ca->name, cb->name);
 }
 
 int main() {

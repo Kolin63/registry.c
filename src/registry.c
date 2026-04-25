@@ -154,3 +154,16 @@ void* registry_ktov(const struct registry* reg, const void* key) {
   if (i < 0) return NULL;
   return registry_itov(reg, i);
 }
+
+int registry_strcmp(const char* a, const char* b) {
+  while (1) {
+    if (*a > *b)
+      return 1;
+    else if (*a < *b)
+      return -1;
+    else if (*a == '\0')
+      return 0;
+    a++;
+    b++;
+  }
+}
