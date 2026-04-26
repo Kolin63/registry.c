@@ -197,7 +197,7 @@ key to index. returns -1 if the key doesn't exist
 ```c
 void* registry_ktov(const struct registry* reg, const void* key);
 ```
-key to value. returns NULL on error
+key to value. returns NULL if the key doesn't exist
 
 ### registry_strcmp()
 ```c
