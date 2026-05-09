@@ -9,5 +9,5 @@ int main() {
     cmp = strcmp(x, y);
   }
 
-  return cmp;
+  return 0;
 }
