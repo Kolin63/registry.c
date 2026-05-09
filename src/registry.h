@@ -33,8 +33,8 @@
 #define COLIN_REGISTRY_VERSION_MINOR 0
 #define COLIN_REGISTRY_VERSION_PATCH 0
 
-// an interface to a single registry. none of these fields should be manually
-// written to.
+// an interface to a single registry. intialized with registry_init(). none of
+// these fields should be manually written to.
 struct registry {
   // amount of keys / values
   int length;

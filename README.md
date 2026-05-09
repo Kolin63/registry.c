@@ -137,8 +137,8 @@ struct registry {
   void* vals;
 };
 ```
-an interface to a single registry. none of these fields should be manually
-written to.
+an interface to a single registry. intialized with `registry_init()`. none of
+these fields should be manually written to.
 
 ### registry_init()
 ```c
