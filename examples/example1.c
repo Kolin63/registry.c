@@ -26,7 +26,8 @@ int main() {
   // initialize registry
   // the last argument passed (the NULL) is a pointer to a cleanup function.
   // we do not need a cleanup function because this example is simple
-  struct registry* reg = registry_init(sizeof(struct city), city_cmp, NULL);
+  struct registry reg;
+  registry_init(&reg, sizeof(struct city), city_cmp, NULL);
 
   // i make buf here so i can dereference it later. when you add a value to a
   // registry, it copies the bytes of the value, it does NOT copy the pointer.
@@ -38,33 +39,33 @@ int main() {
   // nyc
   buf.popl = 8600000; /* 8.6 million */
   buf.name = "new_york_city";
-  registry_add(reg, &buf);
+  registry_add(&reg, &buf);
 
   // los angeles
   buf.popl = 3900000; /* 3.9 million */
   buf.name = "los_angeles";
-  registry_add(reg, &buf);
+  registry_add(&reg, &buf);
 
   // seattle
   buf.popl = 800000; /* 800 thousand */
   buf.name = "seattle";
-  registry_add(reg, &buf);
+  registry_add(&reg, &buf);
 
   // london
   buf.popl = 9000000; /* 9 million */
   buf.name = "london";
-  registry_add(reg, &buf);
+  registry_add(&reg, &buf);
 
   // tokyo
   buf.popl = 14000000; /* 14 million */
   buf.name = "tokyo";
-  registry_add(reg, &buf);
+  registry_add(&reg, &buf);
 
   // now we will get the population for london
   // this function returns NULL if the key is invalid, but for simplicity we
   // will not check that here
   printf("Population of London: %i\n",
-         ((struct city*)registry_ktov(reg, &(struct city){.name = "london"}))
+         ((struct city*)registry_ktov(&reg, &(struct city){.name = "london"}))
              ->popl);
 
   // output: Population of London: 9000000
@@ -72,7 +73,7 @@ int main() {
   // if you have a registry where the values are structs with fields on the
   // heap, remember to make a cleanup function and pass it in the init function
   // that cleanup function would be called here.
-  registry_cleanup(reg);
+  registry_cleanup(&reg);
 
   return 0;
 }
