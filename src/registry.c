@@ -152,6 +152,10 @@ void* registry_ktov(const struct registry* reg, const void* key) {
   return registry_itov(reg, i);
 }
 
+int registry_vtoi(const struct registry* reg, const void* val) {
+  return (val - reg->vals) / reg->val_size;
+}
+
 int registry_strcmp(const char* a, const char* b) {
   while (1) {
     if (*a > *b) return 1;

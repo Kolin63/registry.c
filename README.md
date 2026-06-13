@@ -17,6 +17,7 @@ monsters, etc.
   - [registry_itov_safe()](#registry_itov_safe)
   - [registry_ktoi()](#registry_ktoi)
   - [registry_ktov()](#registry_ktov)
+  - [registry_vtoi()](#registry_vtoi)
   - [registry_strcmp()](#registry_strcmp)
 
 ## Usage
@@ -171,6 +172,12 @@ key to index. returns -1 if the key doesn't exist
 void* registry_ktov(const struct registry* reg, const void* key);
 ```
 key to value. returns NULL if the key doesn't exist
+
+### registry_vtoi()
+```c
+int registry_vtoi(const struct registry* reg, const void* val);
+```
+value to index
 
 ### registry_strcmp()
 ```c

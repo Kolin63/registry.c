@@ -107,6 +107,7 @@ void getter_check(const struct registry* reg, int i, const struct animal* key,
   equals_check_int(registry_ktoi(reg, key), i, file, line);
   value_check(reg, (const struct animal*)registry_ktov(reg, key), val, file,
               line);
+  equals_check_int(registry_vtoi(reg, registry_itov(reg, i)), i, file, line);
 }
 
 void total_check(const struct registry* reg, int i, const struct animal* key,
