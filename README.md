@@ -12,6 +12,9 @@ monsters, etc.
   - [registry_cleanup()](#registry_cleanup)
   - [registry_safe_cmp()](#registry_safe_cmp)
   - [registry_add()](#registry_add)
+  - [registry_del_val()](#registry_del_val)
+  - [registry_del_key()](#registry_del_key)
+  - [registry_del_i()](#registry_del_i)
   - [registry_clear()](#registry_clear)
   - [registry_itov()](#registry_itov)
   - [registry_itov_safe()](#registry_itov_safe)
@@ -141,6 +144,24 @@ void* registry_add(struct registry* reg, const void* val);
 ```
 adds a value. returns pointer to value in registry, or NULL if key already
 exists
+
+### registry_del_val()
+```c
+int registry_del_val(struct registry* reg, void* val);
+```
+removes entry from registry by value pointer. returns 0 if ok
+
+### registry_del_key()
+```c
+int registry_del_key(struct registry* reg, const void* key);
+```
+removes entry from registry that matches key. returns 0 if ok
+
+### registry_del_i()
+```c
+int registry_del_i(struct registry* reg, int i);
+```
+removes entry from registry by index. returns 0 if ok
 
 ### registry_clear()
 ```c

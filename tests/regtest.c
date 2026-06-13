@@ -260,9 +260,139 @@ void thing_test() {
   registry_cleanup(&reg);
 }
 
+int int_cmp(const int* a, const int* b) {
+  return *a - *b;
+}
+
+void del_test_check_during_add(const struct registry* reg, const char* file, int line) {
+  for (int i = 0; i < reg->length; i++) {
+    equals_check_int(*(int*)registry_itov(reg, i), i, file, line);
+  }
+}
+
+void del_test() {
+  struct registry reg;
+  registry_init(&reg, sizeof(int), (void*)int_cmp, NULL);
+
+  registry_add(&reg, &(int){0});
+  del_test_check_during_add(&reg, __FILE_NAME__, __LINE__);
+  registry_add(&reg, &(int){1});
+  del_test_check_during_add(&reg, __FILE_NAME__, __LINE__);
+  registry_add(&reg, &(int){2});
+  del_test_check_during_add(&reg, __FILE_NAME__, __LINE__);
+  registry_add(&reg, &(int){3});
+  del_test_check_during_add(&reg, __FILE_NAME__, __LINE__);
+  registry_add(&reg, &(int){4});
+  del_test_check_during_add(&reg, __FILE_NAME__, __LINE__);
+  registry_add(&reg, &(int){5});
+  del_test_check_during_add(&reg, __FILE_NAME__, __LINE__);
+  registry_add(&reg, &(int){6});
+  del_test_check_during_add(&reg, __FILE_NAME__, __LINE__);
+  registry_add(&reg, &(int){7});
+  del_test_check_during_add(&reg, __FILE_NAME__, __LINE__);
+  registry_add(&reg, &(int){8});
+  del_test_check_during_add(&reg, __FILE_NAME__, __LINE__);
+  registry_add(&reg, &(int){9});
+  del_test_check_during_add(&reg, __FILE_NAME__, __LINE__);
+
+  equals_check_int(*(int*)registry_itov(&reg, 0), 0, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 1), 1, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 2), 2, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 3), 3, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 4), 4, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 5), 5, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 6), 6, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 7), 7, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 8), 8, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 9), 9, __FILE_NAME__, __LINE__);
+
+  equals_check_int(registry_del_key(&reg, &(int){0}), 0, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 0), 1, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 1), 2, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 2), 3, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 3), 4, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 4), 5, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 5), 6, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 6), 7, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 7), 8, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 8), 9, __FILE_NAME__, __LINE__);
+
+  equals_check_int(registry_del_val(&reg, registry_itov(&reg, 4)), 0, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 0), 1, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 1), 2, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 2), 3, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 3), 4, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 4), 6, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 5), 7, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 6), 8, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 7), 9, __FILE_NAME__, __LINE__);
+
+  equals_check_int(registry_del_i(&reg, 7), 0, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 0), 1, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 1), 2, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 2), 3, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 3), 4, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 4), 6, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 5), 7, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 6), 8, __FILE_NAME__, __LINE__);
+
+  equals_check_int(registry_del_key(&reg, &(int){4}), 0, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 0), 1, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 1), 2, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 2), 3, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 3), 6, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 4), 7, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 5), 8, __FILE_NAME__, __LINE__);
+
+  equals_check_int(registry_del_val(&reg, registry_itov(&reg, 5)), 0, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 0), 1, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 1), 2, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 2), 3, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 3), 6, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 4), 7, __FILE_NAME__, __LINE__);
+
+  equals_check_int(registry_del_i(&reg, 0), 0, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 0), 2, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 1), 3, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 2), 6, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 3), 7, __FILE_NAME__, __LINE__);
+
+  equals_check_int(registry_del_key(&reg, &(int){7}), 0, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 0), 2, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 1), 3, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 2), 6, __FILE_NAME__, __LINE__);
+
+  equals_check_int(registry_del_val(&reg, registry_itov(&reg, 0)), 0, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 0), 3, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 1), 6, __FILE_NAME__, __LINE__);
+
+  // ummm... we need another number
+  registry_add(&reg, &(int){5});
+
+  equals_check_int(registry_del_i(&reg, 1), 0, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 0), 3, __FILE_NAME__, __LINE__);
+  equals_check_int(*(int*)registry_itov(&reg, 1), 6, __FILE_NAME__, __LINE__);
+
+  registry_clear(&reg);
+  equals_check_void_ptr(registry_itov_safe(&reg, 0), NULL, __FILE_NAME__, __LINE__);
+
+  registry_add(&reg, &(int){1});
+  equals_check_int(registry_del_key(&reg, &(int){1}), 0, __FILE_NAME__, __LINE__);
+  equals_check_void_ptr(registry_itov_safe(&reg, 0), NULL, __FILE_NAME__, __LINE__);
+
+  registry_add(&reg, &(int){1});
+  equals_check_int(registry_del_val(&reg, registry_itov(&reg, 0)), 0, __FILE_NAME__, __LINE__);
+  equals_check_void_ptr(registry_itov_safe(&reg, 0), NULL, __FILE_NAME__, __LINE__);
+
+  registry_add(&reg, &(int){1});
+  equals_check_int(registry_del_val(&reg, registry_itov(&reg, 0)), 0, __FILE_NAME__, __LINE__);
+  equals_check_void_ptr(registry_itov_safe(&reg, 0), NULL, __FILE_NAME__, __LINE__);
+}
+
 int main() {
   animal_test();
   thing_test();
+  del_test();
 
   if (tests_passed == tests_total) {
     printf("\n\e[0;102m\e[1;30m\e[4;30mAll Tests Passed (%i/%i)\e[0m\n",
